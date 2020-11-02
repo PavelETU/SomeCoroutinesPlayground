@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">TestingCoroutines</string>
+    <string name="success">Data successfully fetched</string>
+    <string name="error">There was an error - check your internet connection</string>
 </resources>

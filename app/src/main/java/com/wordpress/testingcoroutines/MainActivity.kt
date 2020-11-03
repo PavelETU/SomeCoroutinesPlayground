@@ -30,7 +30,7 @@ class MainActivity : AppCompatActivity() {
                     StateOfScreen.SUCCESS -> {
                         contextOfTheScreen.visibility = View.VISIBLE
                         loadingIndicator.visibility = View.INVISIBLE
-                        contextOfTheScreen.text = getString(R.string.success)
+                        contextOfTheScreen.text = "There are ${viewModel.countries!!.size} countries fetched"
                     }
                     StateOfScreen.LOADING -> {
                         contextOfTheScreen.visibility = View.INVISIBLE

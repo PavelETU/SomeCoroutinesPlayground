@@ -2,6 +2,7 @@ package com.wordpress.testingcoroutines
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.After
 import org.junit.Test
@@ -18,14 +19,18 @@ class ViewModelTest {
     @Before
     fun setUp() {
         viewModel = ViewModelToUse(object : Repository {
-            override suspend fun someLongRunningOperation() {
-                delay(1000)
+            override fun getListOfCountriesFromTheWeb(): Flow<List<Country>> {
+                return flowOf(listOf(Country("Ireland", "Ireland", "Irl"))).onEach { delay(1000) }
             }
-        })
+
+            override fun getListOfCountriesFromTheDB(): Flow<List<Country>> {
+                return flowOf(listOf(Country("Ireland", "Ireland", "Irl")))
+            }
+        }, coroutineTestRule.testDispatcher)
     }
 
     @Test
-    fun view() = coroutineTestRule.testDispatcher.runBlockingTest {
+    fun `test state`() = coroutineTestRule.testDispatcher.runBlockingTest {
         viewModel.start()
 
         assertEquals(StateOfScreen.LOADING, viewModel.state.value)

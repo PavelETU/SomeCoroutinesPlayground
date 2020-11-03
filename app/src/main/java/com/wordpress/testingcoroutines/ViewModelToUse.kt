@@ -3,14 +3,14 @@ package com.wordpress.testingcoroutines
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.*
-import kotlinx.coroutines.launch
 
 
 @ExperimentalCoroutinesApi
-class ViewModelToUse @ViewModelInject constructor(private val repository: Repository) : ViewModel() {
+class ViewModelToUse @ViewModelInject constructor(private val repository: Repository,
+                                                  @IODispatcher private val ioDispatcher: CoroutineDispatcher) : ViewModel() {
     private var _state = MutableStateFlow(StateOfScreen.LOADING)
     var countries: List<Country>? = null
     val state: StateFlow<StateOfScreen> = _state
@@ -25,6 +25,6 @@ class ViewModelToUse @ViewModelInject constructor(private val repository: Reposi
                     countries = it
                     _state.value = StateOfScreen.SUCCESS
                 }
-            }.flowOn(Dispatchers.IO).launchIn(viewModelScope)
+            }.flowOn(ioDispatcher).launchIn(viewModelScope)
     }
 }
